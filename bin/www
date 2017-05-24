@@ -11,8 +11,7 @@ var https = require('https');
 /**
  * Get port from environment and store in Express.
  */
-
-var port = normalizePort(process.env.PORT || '3000');
+var port = normalizePort(process.env.PORT || '80');
 app.set('port', port);
 
 /**
@@ -25,11 +24,11 @@ var server = http.createServer(app);
  * Listen on provided port, on all network interfaces.
  */
 
-server.listen('80');
+server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
 
-https.createServer(app).listen(443);
+// https.createServer(app).listen('443');
 
 /**
  * Normalize a port into a number, string, or false.
