@@ -12,6 +12,9 @@ console.log(filePath);
 var fileArr = [];
 
 //读取文件目录
+mongo.deleteMany({}, function(result) {
+    
+});
 fs.readdir(filePath, function(err, files) {
     if (err) {
         console.log(err);
