@@ -9,14 +9,7 @@ router.get('/index_image_list', function(req, res, next) {
     mongo.find({}, function(result) {
             var data = [];
             for (var i = result.length - 1; i >= 0; i--) {
-                var image = {
-                    id: '',
-                    url: '',
-                    imageWidth: "200",
-                    imageHeight: "200"
-                };
-                image.id = result[i].title;
-                image.url = result[i].src;
+                var image = result[i];
                 data.push(image);
             }
             res.send(data);

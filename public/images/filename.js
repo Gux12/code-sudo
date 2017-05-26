@@ -3,9 +3,7 @@ var mongo = require('../../db/mongodb');
 // var images=require('images');
 //path模块，可以生产相对和绝对路径
 var path = require("path");
-
-//配置远程路径
-var remotePath = "/resource/fd/promote/201507/qixi/";
+var gm = require('gm').subClass({ imageMagick: true });
 
 //获取当前目录绝对路径，这里resolve()不传入参数
 var filePath = __dirname;
@@ -20,7 +18,6 @@ fs.readdir(filePath, function(err, files) {
         return;
     }
     var count = files.length;
-    console.log(files);
     var results = {};
     files.forEach(function(filename) {
 
@@ -36,26 +33,45 @@ fs.readdir(filePath, function(err, files) {
                 // }
                 // // (getdir(filename) == 'html')&&(fileArr.push(filename);writeFile(newUrl));
                 var image = {
-                    "title": "code0",
+                    "title": "",
                     "src": "",
-                    "createTime": "",
-                    "lastModifyTime": "",
+                    "thumb_src": "",
+                    "CreateTime": "",
+                    "lastModifiedTime": "",
                     "lastAccessTime": "",
                     "size": "",
                     "kind": "",
                     "dimensions": "",
                     "colorSpace": "",
-                    "alphaChannel": "",
-                    "Extension": ""
+                    "extension": ""
                 };
-                image.Extension = path.extname(filename);
-                image.title = path.basename(filename,image.Extension);
-                image.src = path.join('/images',filename);
-                image.size = stats.size; 
-                console.log(image);               
-                mongo.insertMany([image], function(result) {
-                    // console.log("%s is file", path.join(filePath, filename));
-                });
+                image.extension = path.extname(filename);
+                image.title = path.basename(filename, image.extension);
+                image.src = path.join('/images', filename);
+                image.size = stats.size;
+                gm(path.join(filePath, filename))
+                    .resize(100, 100)
+                    .noProfile()
+                    .write(path.join(filePath, 'thumb', image.title + '_thumb' + image.extension), function(err) {
+                        if (!err) console.log('done');
+                        image.thumb_src = path.join('/images', 'thumb', image.title + '_thumb' + image.extension);
+                        gm(path.join(filePath, filename))
+                            .identify(function(err, data) {
+                                if (!err) {
+                                    console.log(data)
+                                    image.dimensions = data.size;
+                                    image.kind = data.Format;
+                                    image.colorSpace = data.Colorspace;
+                                    console.log(image);
+                                    image.CreateTime = new Date(data.Properties['date:create']);
+                                    image.lastModifiedTime = new Date(data.Properties['date:modify']);
+                                    mongo.insertMany([image], function(result) {
+                                        // console.log("%s is file", path.join(filePath, filename));
+                                    });
+
+                                }
+                            });
+                    });
             }
         });
     });
@@ -74,8 +90,10 @@ function readFile(readurl, name) {
     console.log(name);
     var name = name;
     fs.readdir(readurl, function(err, files) {
-        if (err) { console.log(err);
-            return; }
+        if (err) {
+            console.log(err);
+            return;
+        }
 
         files.forEach(function(filename) {
             // console.log(path.join(readurl,filename));
