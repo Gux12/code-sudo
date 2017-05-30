@@ -7,6 +7,10 @@ $(document).ready(function($) {
                 // console.log(data);
                 data.submit();
             },
+            progressall: function(e, data) {
+                var progress = parseInt(data.loaded / data.total * 100, 10);
+                $('#uploadbar').css('width', progress + '%');
+            },
             done: function(e, data) {
                 console.dir(data);
                 // $.each(data.result.files, function(index, file) {
@@ -18,7 +22,7 @@ $(document).ready(function($) {
         });
     });
     $('#button-upload').click(function(event) {
-        console.log(1);
+        // console.log(1);
         $('#fileupload').click();
     });
     $('.button-close').click(function(event) {
@@ -28,12 +32,14 @@ $(document).ready(function($) {
     })
     $('.button-delete-yes').click(function(event) {
         /* Act on the event */
+        $('#model-close').modal('hide');
         $.ajax({
                 url: this.dataset.url,
                 type: 'DELETE'
             })
             .done(function() {
                 console.log("success");
+                location.reload();
             })
             .fail(function() {
                 console.log("error");
