@@ -1,0 +1,41 @@
+extends layout
+
+block content
+	h1= title
+	p Welcome to #{title}
+	button.button.button-caution.button-box.button-giant.button-longshadow-right#button-upload
+		i.fa.fa-upload(aria-hidden="true")
+	input(id="fileupload" type="file" name="files[]" data-url="/upload/middle/location" multiple)
+	div.image-area
+		each YearMonthDatePhotos , year in photos
+			each MonthDatePhotos , month in YearMonthDatePhotos
+				each DatePhotos , date in MonthDatePhotos
+					div.image-block(id= year + month + date)
+						p.date-title  #{year}年#{month}月#{date}日
+						div.image-block-content
+							each photo in DatePhotos
+								div.image-manage-area(id = photo._id)
+									div.button-utl
+										button.button.button-caution.button-box.button-small.button-close(data-toggle="modal" data-target="#modal-close" data-url= photo.urls.deleteUrl)
+											i.fa.fa-close(aria-hidden="true")
+										button.button.button-primiry.button-box.button-small.button-edit
+											i.fa.fa-edit(aria-hidden="true")
+									img(src = photo.urls.mediumUrl,class= 'code-image')
+									p #{photo.title}
+	div#modal-close.modal.fade(tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel")
+		div.modal-dialog(role="document")
+			div.modal-content
+				div.modal-header
+					button.close(type="button" data-dismiss="modal" aria-label="Close")
+						span(aria-hidden="true")&times;
+					h4.modal-title#exampleModalLabel 是否确认删除此照片
+				div.modal-footer
+					button.button.button-highlight.button-delete-yes(data-url) 是
+					button.button.button-caution.button-delete-no(data-dismiss="modal") 否
+	script(src= '/jquery/dist/jquery.min.js')
+	script(src= '/bootstrap/dist/js/bootstrap.min.js')
+	script(src= '/blueimp-file-upload/js/vendor/jquery.ui.widget.js' )
+	script(src= '/blueimp-file-upload/js/jquery.iframe-transport.js')
+	script(src= '/blueimp-file-upload/js/jquery.fileupload.js')
+	script(src= '/blueimp-load-image/js/load-image.all.min.js')
+	script(src= '/javascripts/upload/upload.js')

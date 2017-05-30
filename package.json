@@ -3,15 +3,20 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "initmongo": "node ./public/images/filename.js"
   },
   "dependencies": {
+    "blueimp-canvas-to-blob": "^3.7.0",
+    "blueimp-file-upload": "^9.18.0",
+    "blueimp-load-image": "^2.12.2",
     "body-parser": "~1.17.1",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.3",
     "express": "^4.15.3",
     "gm": "^1.23.0",
     "jade": "~1.11.0",
+    "jquery-file-upload-middleware": "^0.1.8",
     "mongodb": "^2.2.27",
     "morgan": "~1.8.1",
     "serve-favicon": "~2.4.2"

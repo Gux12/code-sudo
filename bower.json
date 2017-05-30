@@ -1,0 +1,21 @@
+{
+  "name": "code-sudo",
+  "description": "",
+  "main": "",
+  "authors": [
+    "gavin <gx199492@qq.com>"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/Gux12/code-sudo",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "components-font-awesome": "^4.7.0"
+  }
+}
