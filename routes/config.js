@@ -6,7 +6,7 @@ exports.resizeVersion = {
         },
         small: {
             width:200,
-            height:"150!"
+            height:150
         },
         medium:{
             width:400,
@@ -27,12 +27,8 @@ exports.resizeVersion = {
             ]
         },
         small: {
-            width:"200",
-            height:"150^",
-            imageArgs: [
-                "-gravity", "center",
-                "-extent", "200x150"
-            ]
+            width:200,
+            height:150,
         },
         medium:{
             width:400,
