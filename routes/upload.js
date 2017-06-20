@@ -21,6 +21,40 @@ var gm = require('gm').subClass({ imageMagick: true });
 //获取当前目录绝对路径，这里resolve()不传入参数
 var filePath = 'public/images/location';
 
+
+/*
+ * routes
+ * */
+router.get('/', function(req, res) {
+    mongo.find({}, function(result) {
+        var data = {};
+        for (var i = result.length - 1; i >= 0; i--) {
+            var image = result[i];
+            var lastModifiedTime = new Date(result[i].lastModifiedTime);
+            var year = lastModifiedTime.getFullYear().toString();
+            var month = (lastModifiedTime.getMonth() + 1).toString();
+            var date = lastModifiedTime.getDate().toString();
+            // var locateString = lastModifiedTime.getLocateString();
+            if (data[year] == undefined) {
+                data[year] = {};
+                data[year][month] = {};
+                data[year][month][date] = [];
+                data[year][month][date].push(image);
+            } else if (data[year][month] == undefined) {
+                data[year][month] = {};
+                data[year][month][date] = [];
+                data[year][month][date].push(image);
+            } else if (data[year][month][date] == undefined) {
+                data[year][month][date] = [];
+                data[year][month][date].push(image);
+            } else {
+                data[year][month][date].push(image);
+            }
+        }
+        res.render('manage', { title: 'Code & Sudo\'s Land', photos: data });
+    })
+});
+
 // jquery-file-upload helper
 router.use('/middle/default', function(req, res, next) {
     upload.fileHandler({
@@ -103,11 +137,14 @@ upload.on('end', function(fileInfo, req, res) {
                             var datetime = buf[1].split(':');
                             image.CreateTime = new Date(parseInt(fullyear[0]), parseInt(fullyear[1]) - 1, parseInt(fullyear[2]), (parseInt(datetime[0]) + 8) % 24, parseInt(datetime[0]), parseInt(datetime[0]));
                         } else {
-                            image.CreateTime = new Date(data.Properties['date:create']);
+                            image.CreateTime = new Date(parseInt(req.fields.lastModified));
                         }
                         // console.dir(req.fields.lastModified);
                         image.lastModifiedTime = new Date(parseInt(req.fields.lastModified));
                         image.lastAccessTime = new Date();
+                        fs.utimes(path.join(filePath, fileInfo.name), Date.parse(image.CreateTime)/1000, Date.parse(image.CreateTime)/1000, function(){
+                            console.log();
+                        });
                         mongo.insertMany([image], function(result) {
                             // console.log("%s is file", path.join(filePath, filename));
                         });
@@ -131,40 +168,6 @@ upload.on('delete', function(fileName) {
 
 upload.on('error', function(e) {
     console.log(e.message);
-});
-
-
-/*
- * routes
- * */
-router.get('/', function(req, res) {
-    mongo.find({}, function(result) {
-        var data = {};
-        for (var i = result.length - 1; i >= 0; i--) {
-            var image = result[i];
-            var lastModifiedTime = new Date(result[i].lastModifiedTime);
-            var year = lastModifiedTime.getFullYear().toString();
-            var month = (lastModifiedTime.getMonth() + 1).toString();
-            var date = lastModifiedTime.getDate().toString();
-            // var locateString = lastModifiedTime.getLocateString();
-            if (data[year] == undefined) {
-                data[year] = {};
-                data[year][month] = {};
-                data[year][month][date] = [];
-                data[year][month][date].push(image);
-            } else if (data[year][month] == undefined) {
-                data[year][month] = {};
-                data[year][month][date] = [];
-                data[year][month][date].push(image);
-            } else if (data[year][month][date] == undefined) {
-                data[year][month][date] = [];
-                data[year][month][date].push(image);
-            } else {
-                data[year][month][date].push(image);
-            }
-        }
-        res.render('manage', { title: 'Code & Sudo\'s Land', photos: data });
-    })
 });
 
 module.exports = router;
