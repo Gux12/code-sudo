@@ -16,7 +16,7 @@ exports.insertMany = function(data, callback) {
                 // assert.equal(data.length, result.result.n);
                 // assert.equal(data.length, result.ops.length);
                 console.log("向" + DB.collection + "插入" + data.length + "个文档");
-                // console.log(result);
+                console.log(result);
                 callback(result);
             });
         });
@@ -35,7 +35,7 @@ exports.find = function(condition, callback) {
             collection.find(condition).toArray(function(err, docs) {
                 assert.equal(err, null);
                 console.log("找到文档");
-                // console.log(docs);
+                console.log(docs);
                 callback(docs);
             });
         });
@@ -54,7 +54,7 @@ exports.updateMany = function(condition, data, callback) {
             collection.updateMany(condition, { $set: data }, function(err, result) {
                 assert.equal(err, null);
                 console.log("更新成功");
-                // console.log(result);
+                console.log(result);
                 callback(result);
             });
         });
@@ -74,7 +74,7 @@ exports.deleteMany = function(condition, callback) {
                 assert.equal(err, null);
                 // assert.equal(1, result.result.n);
                 console.log("删除成功");
-                // console.log(result);
+                console.log(result);
                 callback(result);
             });
         });
